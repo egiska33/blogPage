@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Post extends Model
 {
@@ -28,5 +29,17 @@ class Post extends Model
 //            'body' => $body,
 //            'post_id' => $this->id
 //        ]);
+    }
+
+    public function scopeFilter($query, $filters)
+    {
+//        die(var_dump($filters));
+        if(array_key_exists('month', $filters)){
+            $query->whereMonth('created_at', Carbon::parse($filters['month'])->month);
+        }
+
+        if(array_key_exists('year', $filters)){
+            $query->whereYear('created_at', $filters['year']);
+        }
     }
 }

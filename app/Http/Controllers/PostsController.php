@@ -20,17 +20,11 @@ class PostsController extends Controller
 
     public function index()
     {
-        $query = Post::latest();
+        $posts = Post::latest()
+            ->filter(request(['month', 'year']))
+            ->get();
 
-        if($month = request('month')){
-            $query->whereMonth('created_at', Carbon::parse($month)->month);
-        }
 
-        if($year = request('year')){
-            $query->whereYear('created_at', $year);
-        }
-
-        $posts=$query->get();
 
         $archives = Post::selectRaw('year(created_at) year, monthname(created_at) month, count(*) published')
             ->groupBy('year','month')
